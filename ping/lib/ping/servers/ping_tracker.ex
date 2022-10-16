@@ -55,7 +55,7 @@ defmodule Ping.Servers.PingTracker do
 
   @impl GenServer
   def handle_call({:delete, name}, _from, state) do
-    updated_state = Enum.filter(state, fn {k, _v} -> k != name end)
+    updated_state = Enum.filter(state, fn {k, _v} -> k != name end) |> Enum.into(%{})
     {:reply, :ok, updated_state}
   end
 
