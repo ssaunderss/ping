@@ -21,6 +21,12 @@ defmodule Ping.API.HealthCheck do
     |> PingTracker.insert_ping()
   end
 
+  @spec delete_ping(String.t()) :: term()
+  def delete_ping(name) do
+    name
+    |> PingTracker.delete_ping()
+  end
+
   def format_ping(%{"frequency" => frequency, "name" => name} = params) do
     formatted_frequency = format_frequency(frequency)
 

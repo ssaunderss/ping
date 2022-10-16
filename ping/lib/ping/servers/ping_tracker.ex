@@ -22,6 +22,11 @@ defmodule Ping.Servers.PingTracker do
     GenServer.call(server_name, {:insert, ping})
   end
 
+  @spec delete_ping(String.t()) :: term()
+  def delete_ping(name, server_name \\ __MODULE__) do
+    GenServer.call(server_name, {:delete, name})
+  end
+
   @spec start_link(Keyword.t()) :: GenServer.on_start()
   def start_link(opts \\ []) do
     name = Keyword.get(opts, :name, __MODULE__)
@@ -46,6 +51,12 @@ defmodule Ping.Servers.PingTracker do
   @impl GenServer
   def handle_call(:inspect, _from, state) do
     {:reply, state, state}
+  end
+
+  @impl GenServer
+  def handle_call({:delete, name}, _from, state) do
+    updated_state = Enum.filter(state, fn {k, _v} -> k != name end)
+    {:reply, :ok, updated_state}
   end
 
   @impl GenServer
