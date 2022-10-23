@@ -9,6 +9,8 @@ defmodule Ping.Servers.PingTracker do
   """
   use GenServer
 
+  require Logger
+
   alias Ping.Servers.RefreshLogic
   alias Ping.Types.HealthCheck
 
@@ -22,7 +24,7 @@ defmodule Ping.Servers.PingTracker do
     GenServer.call(server_name, {:insert, ping})
   end
 
-  @spec delete_ping(String.t()) :: term()
+  @spec delete_ping(String.t()) :: {:ok, integer()}
   def delete_ping(name, server_name \\ __MODULE__) do
     GenServer.call(server_name, {:delete, name})
   end
@@ -55,8 +57,10 @@ defmodule Ping.Servers.PingTracker do
 
   @impl GenServer
   def handle_call({:delete, name}, _from, state) do
+    num_keys_old = Map.keys(state) |> length()
     updated_state = Enum.filter(state, fn {k, _v} -> k != name end) |> Enum.into(%{})
-    {:reply, :ok, updated_state}
+    num_keys_new = Map.keys(updated_state) |> length()
+    {:reply, {:ok, num_keys_old - num_keys_new}, updated_state}
   end
 
   @impl GenServer
@@ -71,6 +75,11 @@ defmodule Ping.Servers.PingTracker do
   @impl GenServer
   def handle_info({_ref, :ok}, state) do
     {:noreply, state}
+  end
+
+  @impl GenServer
+  def handle_info(msg, state) do
+    Logger.error("[ping tracker] received unhandled message: #{inspect(msg)}")
   end
 
   defp ping_tracker_refresh_interval,
