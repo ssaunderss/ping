@@ -117,4 +117,33 @@ defmodule PingWeb.HealthChecksControllerTest do
       assert filtered == []
     end
   end
+
+  test "invalid named service returns 400", %{conn: conn} do
+    get(
+      conn,
+      Routes.health_checks_path(conn, :index, %{"name" => "test2", "frequency" => "1s"})
+    )
+
+    {name, _v} =
+      PingTracker.inspect_pings()
+      |> Enum.filter(fn {k, _v} -> k == "test2" end)
+      |> Enum.at(0)
+
+    assert name == "test2"
+
+    resp =
+      delete(
+        conn,
+        Routes.health_checks_path(conn, :delete, "i dont exist")
+      )
+
+    assert resp.status == 400
+
+    filtered_state =
+      PingTracker.inspect_pings()
+      |> Map.keys()
+      |> Enum.filter(fn x -> x == "test2" end)
+
+    assert filtered_state == ["test2"]
+  end
 end

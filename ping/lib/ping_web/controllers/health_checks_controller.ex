@@ -31,9 +31,17 @@ defmodule PingWeb.HealthChecksController do
 
   def delete(conn, %{"name" => name} = params) do
     try do
-      :ok = HealthCheck.delete_ping(name)
-      message = "Successfully deleted ping: #{name}"
-      ApiResponses.success(conn, message)
+      {:ok, num_deleted} = HealthCheck.delete_ping(name)
+
+      case num_deleted do
+        0 ->
+          message = "Could not delete ping #{inspect(name)} because it does not exist. "
+          ApiResponses.error(conn, message)
+
+        _ ->
+          message = "Successfully deleted ping: #{name}"
+          ApiResponses.success(conn, message)
+      end
     rescue
       e ->
         message = "Could not delete ping with params #{inspect(params)}"
