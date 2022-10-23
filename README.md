@@ -65,8 +65,9 @@ GET /ping?name=daily_digest
 ```
 
 ## Further Work
+- [x] Add `/ping/remove` endpoint which accepts a `name` parameter.
 - [ ] Add an auth mechanism
-- [ ] Add `/ping/remove` endpoint which accepts a `name` parameter.
-- [ ] Move state off of this service - maybe try out Fly's LiteFS.
+- [ ] Tighten up logic around schedule changes
+- [ ] Move state off of this service - maybe try out SQLite -> Fly's LiteFS.
 - [ ] Add some automated CI/CD for testing/formatting/linting.
 

@@ -8,3 +8,10 @@ erl_crash.dump
 *.beam
 /config/*.secret.exs
 .elixir_ls/
+
+# fly stuff
+fly.toml
+Dockerfile
+.dockerignore
+.DS_Store
+rel/
