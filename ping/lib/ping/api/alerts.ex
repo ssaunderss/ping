@@ -26,10 +26,6 @@ defmodule Ping.API.Alerts do
     end)
 
     :ok
-
-    # if response.status != 200 do
-    #   Logger.error("[alerts] could not connect to alerts endpoint: #{inspect(alert_uri())}")
-    # end
   end
 
   defp alert_uri(), do: Application.get_env(:ping, :alert_uri)
