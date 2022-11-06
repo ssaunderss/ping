@@ -64,8 +64,23 @@ For example, if we have a job called `daily_digest` and we deprecate this job (m
 GET /ping?name=daily_digest
 ```
 
+## Performance Rewrite
+The HTTP server for this service was rewritten so that Phoenix and it's dependencies were dropped and replaced with a plain old plug cowboy http server. The original Phoenix project was spun up using the following flags: `--no-assets --no-ecto --no-html --no-gettext --no-live --no-dashboard --no-mailer` so that this service would have as lean of an API as possible, but using Phoenix still came with a very large performance overhead cost. 
+
+By ripping out Phoenix and its dependencies, I saw about 90% faster API response times.
+
+The original Phoenix version is in the branch `phoenix-version` if you'd like to test it out yourself.
+
+| Endpoint | HTTP Server | Avg Response Time |
+| :---     | :---:       | :---:             |
+| GET /ping | Plug Cowboy | 104&mu;s         |
+|           | Phoenix    | 1005&mu;s         |
+| DELETE /ping | Plug Cowboy | 63&mu;s       |
+|           | Phoenix     | 702&mu;s         |
+
 ## Further Work
 - [x] Add `/ping/remove` endpoint which accepts a `name` parameter.
+- [x] Performance tuning - speed up API by ditching Phoenix.
 - [ ] Add an auth mechanism
 - [ ] Tighten up logic around schedule changes
 - [ ] Move state off of this service - maybe try out SQLite -> Fly's LiteFS.
