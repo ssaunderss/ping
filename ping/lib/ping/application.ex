@@ -8,12 +8,11 @@ defmodule Ping.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Start the Telemetry supervisor
-      PingWeb.Telemetry,
-      # Start the PubSub system
-      {Phoenix.PubSub, name: Ping.PubSub},
-      # Start the Endpoint (http/https)
-      PingWeb.Endpoint,
+      Plug.Adapters.Cowboy.child_spec(
+        scheme: :http,
+        plug: Ping.Router,
+        options: [port: Application.fetch_env!(:ping, :port)]
+      ),
       {Ping.Servers.PingTracker, []}
     ]
 
@@ -21,13 +20,5 @@ defmodule Ping.Application do
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Ping.Supervisor]
     Supervisor.start_link(children, opts)
-  end
-
-  # Tell Phoenix to update the endpoint configuration
-  # whenever the application is updated.
-  @impl true
-  def config_change(changed, _new, removed) do
-    PingWeb.Endpoint.config_change(changed, removed)
-    :ok
   end
 end
