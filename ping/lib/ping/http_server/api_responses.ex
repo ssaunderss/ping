@@ -1,5 +1,5 @@
-defmodule PingWeb.ApiResponses do
-  use PingWeb, :controller
+defmodule Ping.HttpServer.ApiResponses do
+  import Plug.Conn
 
   def success(conn, message) do
     conn

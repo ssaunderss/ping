@@ -7,20 +7,10 @@
 # General application configuration
 import Config
 
-# Configures the endpoint
-config :ping, PingWeb.Endpoint,
-  url: [host: "localhost"],
-  render_errors: [view: PingWeb.ErrorView, accepts: ~w(json), layout: false],
-  pubsub_server: Ping.PubSub,
-  live_view: [signing_salt: "w/IG4X7J"]
-
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
-
-# Use Jason for JSON parsing in Phoenix
-config :phoenix, :json_library, Jason
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

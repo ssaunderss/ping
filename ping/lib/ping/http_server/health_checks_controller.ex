@@ -1,8 +1,6 @@
-defmodule PingWeb.HealthChecksController do
-  use PingWeb, :controller
-
+defmodule Ping.HttpServer.HealthChecksController do
   alias Ping.API.HealthCheck
-  alias PingWeb.ApiResponses
+  alias Ping.HttpServer.ApiResponses
 
   require Logger
 
@@ -36,6 +34,7 @@ defmodule PingWeb.HealthChecksController do
       case num_deleted do
         0 ->
           message = "Could not delete ping #{inspect(name)} because it does not exist. "
+
           ApiResponses.error(conn, message)
 
         _ ->

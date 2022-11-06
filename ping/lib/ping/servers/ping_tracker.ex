@@ -80,6 +80,7 @@ defmodule Ping.Servers.PingTracker do
   @impl GenServer
   def handle_info(msg, state) do
     Logger.error("[ping tracker] received unhandled message: #{inspect(msg)}")
+    {:noreply, state}
   end
 
   defp ping_tracker_refresh_interval,
