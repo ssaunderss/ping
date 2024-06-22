@@ -13,5 +13,6 @@ defmodule PingWeb.ConnCase do
   end
 
   setup _tags do
+    {:ok, %{}}
   end
 end
