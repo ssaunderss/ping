@@ -29,7 +29,7 @@ mix test
 
 ## About the Ping Server
 
-### `/ping`
+### `GET /ping`
 The `/ping` endpoint accepts 3 parameters, 2 are necessary (`name`, `frequency`) and 1 is optional (`timestamp`), in the following example both are valid requests:
 
 ```bash
@@ -51,7 +51,7 @@ GET /ping?name=daily_digest&frequency=1D
 
 Once the ping service receives this request, it should expect the subsequent request within the next day, failing to hear back within that timeframe an alert endpoint will be called. For local development you can set up your own webhook on [webhook.site](https://webhook.site) as the alert endpoint.
 
-### `/ping/remove`
+### `DELETE /ping/:name`
 
 In the case that an upstream service becomes deprecated, there is an endpoint for removing that service from the internal monitoring system.
 
@@ -60,8 +60,8 @@ This endpoint accepts 1 parameter:
 
 For example, if we have a job called `daily_digest` and we deprecate this job (maybe in favor of a `weekly_digest` job) we no longer have a need to monitor this job because we're no longer expecting pings. To remove this job we could call:
 
-```
-GET /ping?name=daily_digest
+```bash
+curl -X "DELETE" "127.0.0.1:4000/ping/daily_digest"
 ```
 
 ## Performance Rewrite
@@ -83,8 +83,7 @@ The original Phoenix version is in the branch `phoenix-version` if you'd like to
 - [x] Performance tuning - speed up API by ditching Phoenix.
 - [x] Replace `:tesla` with `:req`
 - [ ] Add an auth mechanism
-- [ ] Address edge case in `/delete` when name doesn't exist
-- [ ] Add guard for last_ping_timestamp (thinking of scenario where incoming timestamp is sooner that state timestamp)
+- [x] Add guard for last_ping_timestamp - don't allow incoming pings to overwrite previous pings
 - [ ] Tighten up logic around schedule changes
 - [ ] Move state off of this service - maybe try out SQLite -> Fly's LiteFS.
 - [ ] Add some automated CI/CD for testing/formatting/linting.

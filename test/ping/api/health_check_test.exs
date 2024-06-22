@@ -78,12 +78,12 @@ defmodule Ping.API.HealthCheckTest do
     end
   end
 
-  describe "insert_ping/1" do
+  describe "upsert_ping/1" do
     test "Successfully inserts well formatted ping" do
       now_unix = DateTime.utc_now() |> DateTime.to_unix() |> Integer.to_string()
       ping = %{"name" => "test_service", "frequency" => "2W", "timestamp" => now_unix}
       start_supervised!({Ping.Servers.PingTracker, name: :test_ping_tracker})
-      assert HealthCheck.insert_ping(ping, :test_ping_tracker) == :ok
+      assert HealthCheck.upsert_ping(ping, :test_ping_tracker) == :ok
       ping_tracker_state = PingTracker.inspect_pings(:test_ping_tracker)
       assert ["test_service"] = Map.keys(ping_tracker_state)
     end

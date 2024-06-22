@@ -8,17 +8,17 @@ defmodule Ping.API.HealthCheck do
           timestamp: String.t() | nil
         }
 
-  @spec insert_ping(params) :: term()
-  def insert_ping(params, server_name) do
+  @spec upsert_ping(params()) :: :ok | :error
+  def upsert_ping(params, server_name) do
     params
     |> format_ping()
-    |> PingTracker.insert_ping(server_name)
+    |> PingTracker.upsert_ping(server_name)
   end
 
-  def insert_ping(params) do
+  def upsert_ping(params) do
     params
     |> format_ping()
-    |> PingTracker.insert_ping()
+    |> PingTracker.upsert_ping()
   end
 
   @spec delete_ping(String.t()) :: term()
@@ -27,6 +27,7 @@ defmodule Ping.API.HealthCheck do
     |> PingTracker.delete_ping()
   end
 
+  @spec format_ping(map()) :: HealthCheck.t()
   def format_ping(%{"frequency" => frequency, "name" => name} = params) do
     formatted_frequency = format_frequency(frequency)
 

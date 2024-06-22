@@ -8,9 +8,13 @@ defmodule Ping.HttpServer.HealthChecksController do
 
   def index(conn, %{"name" => name, "frequency" => _frequency} = params) do
     try do
-      :ok = HealthCheck.insert_ping(params)
-      message = "Successfully recorded ping for #{name}"
-      ApiResponses.success(conn, message)
+      case HealthCheck.upsert_ping(params) do
+        :ok ->
+          ApiResponses.success(conn, "Successfully recorded ping for #{name}")
+
+        :error ->
+          ApiResponses.error(conn, "A ping with an earlier timestamp has already been recorded.")
+      end
     rescue
       e ->
         message = "Could not record ping with params #{inspect(params)}"

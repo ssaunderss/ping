@@ -1,11 +1,12 @@
 defmodule Ping.Servers.PingTracker do
   @moduledoc """
-  Main backend server for the /ping endpoint.
-  When a request comes in, the job is upserted
-  into the server state. This server also polls
-  itself every second to check for past due pings.
+  Main backend server for the /ping endpoint.When a request comes in, the job is upserted
+  into the server state. This server also polls itself every second to check for past due pings.
 
-  If any pings are past due, alerts external service
+  The only time an upsert would fail is if the timestamp of the incoming ping is older than the
+  timestamp currently in recorded in the state.
+
+  If any pings are past due, an external service is alerted.
   """
   use GenServer
 
@@ -19,9 +20,9 @@ defmodule Ping.Servers.PingTracker do
     GenServer.call(server_name, :inspect)
   end
 
-  @spec insert_ping(HealthCheck.t()) :: term()
-  def insert_ping(ping, server_name \\ __MODULE__) do
-    GenServer.call(server_name, {:insert, ping})
+  @spec upsert_ping(HealthCheck.t()) :: :ok | :error
+  def upsert_ping(ping, server_name \\ __MODULE__) do
+    GenServer.call(server_name, {:upsert, ping})
   end
 
   @spec delete_ping(String.t()) :: {:ok, integer()}
@@ -45,9 +46,19 @@ defmodule Ping.Servers.PingTracker do
   end
 
   @impl GenServer
-  def handle_call({:insert, ping}, _from, state) do
-    updated_state = Map.put(state, ping.name, ping)
-    {:reply, :ok, updated_state}
+  def handle_call({:upsert, ping}, _from, state) do
+    existing_ping = Map.get(state, ping.name)
+
+    if is_nil(existing_ping) do
+      {:reply, :ok, Map.put(state, ping.name, ping)}
+    else
+      # if we get a ping with a timestamp before the existing one, toss it
+      if DateTime.after?(existing_ping.last_ping_timestamp, ping.last_ping_timestamp) do
+        {:reply, :error, state}
+      else
+        {:reply, :ok, Map.put(state, ping.name, ping)}
+      end
+    end
   end
 
   @impl GenServer
