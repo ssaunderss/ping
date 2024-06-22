@@ -27,10 +27,10 @@ defmodule Ping.MixProject do
 
   defp deps do
     [
-      {:jason, "~> 1.2"},
+      {:jason, "~> 1.4"},
       {:tesla, "~> 1.4"},
-      {:plug_cowboy, "~> 2.6"},
-      {:plug, "~> 1.14"}
+      {:plug_cowboy, "~> 2.7"},
+      {:plug, "~> 1.16"}
     ]
   end
 

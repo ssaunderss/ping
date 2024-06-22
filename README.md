@@ -8,7 +8,7 @@ I use `asdf` as my local package manager - to get up and running you'll need to 
 ```bash
 # on mac
 brew install asdf
-asdf install 
+asdf install
 ```
 
 Additionally, you'll need to set the following environment variable `PING_ALERT_URI` - this is the Alerts Service (AS) callback URI:
@@ -16,7 +16,7 @@ Additionally, you'll need to set the following environment variable `PING_ALERT_
 echo 'export PING_ALERT_URI="some.alert.service"' >> ~/.zshrc # or ~/.bashrc if you use bash
 ```
 
-After that's set up run the following from the root of the project directory: 
+After that's set up run the following from the root of the project directory:
 ```bash
 mix deps.get && mix deps.compile
 ```
@@ -65,7 +65,7 @@ GET /ping?name=daily_digest
 ```
 
 ## Performance Rewrite
-The HTTP server for this service was rewritten so that Phoenix and it's dependencies were dropped and replaced with a plain old plug cowboy http server. The original Phoenix project was spun up using the following flags: `--no-assets --no-ecto --no-html --no-gettext --no-live --no-dashboard --no-mailer` so that this service would have as lean of an API as possible, but using Phoenix still came with a very large performance overhead cost. 
+The HTTP server for this service was rewritten so that Phoenix and it's dependencies were dropped and replaced with a plain old plug cowboy http server. The original Phoenix project was spun up using the following flags: `--no-assets --no-ecto --no-html --no-gettext --no-live --no-dashboard --no-mailer` so that this service would have as lean of an API as possible, but using Phoenix still came with a very large performance overhead cost.
 
 By ripping out Phoenix and its dependencies, I saw about 90% faster API response times.
 
@@ -81,8 +81,10 @@ The original Phoenix version is in the branch `phoenix-version` if you'd like to
 ## Further Work
 - [x] Add `/ping/remove` endpoint which accepts a `name` parameter.
 - [x] Performance tuning - speed up API by ditching Phoenix.
+- [ ] Replace `:tesla` with `:req`
 - [ ] Add an auth mechanism
+- [ ] Address edge case in `/delete` when name doesn't exist
+- [ ] Add guard for last_ping_timestamp (thinking of scenario where incoming timestamp is sooner that state timestamp)
 - [ ] Tighten up logic around schedule changes
 - [ ] Move state off of this service - maybe try out SQLite -> Fly's LiteFS.
 - [ ] Add some automated CI/CD for testing/formatting/linting.
-
