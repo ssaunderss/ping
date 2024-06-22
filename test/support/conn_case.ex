@@ -8,20 +8,10 @@ defmodule PingWeb.ConnCase do
 
   using do
     quote do
-      # Import conveniences for testing with connections
-      # import Plug.Conn
-      # import Phoenix.ConnTest
-      # import PingWeb.ConnCase
       use Plug.Test
-
-      # alias PingWeb.Router.Helpers, as: Routes
-
-      # # The default endpoint for testing
-      # @endpoint PingWeb.Endpoint
     end
   end
 
   setup _tags do
-    {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
 end

@@ -28,7 +28,7 @@ defmodule Ping.MixProject do
   defp deps do
     [
       {:jason, "~> 1.4"},
-      {:tesla, "~> 1.4"},
+      {:req, "~> 0.5"},
       {:plug_cowboy, "~> 2.7"},
       {:plug, "~> 1.16"}
     ]

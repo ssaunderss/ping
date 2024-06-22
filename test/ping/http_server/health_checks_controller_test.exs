@@ -68,9 +68,8 @@ defmodule PingWeb.HealthChecksControllerTest do
 
   describe "DELETE /ping" do
     test "valid named service that's being monitored gets deleted" do
-      conn =
-        conn(:get, "/ping", %{name: "test5", frequency: "1s"})
-        |> Ping.Router.call(@opts)
+      conn(:get, "/ping", %{name: "test5", frequency: "1s"})
+      |> Ping.Router.call(@opts)
 
       {name, _v} =
         PingTracker.inspect_pings()
@@ -93,9 +92,8 @@ defmodule PingWeb.HealthChecksControllerTest do
     end
 
     test "invalid named service returns 400" do
-      conn =
-        conn(:get, "/ping", %{name: "test6", frequency: "1s"})
-        |> Ping.Router.call(@opts)
+      conn(:get, "/ping", %{name: "test6", frequency: "1s"})
+      |> Ping.Router.call(@opts)
 
       {name, _v} =
         PingTracker.inspect_pings()

@@ -1,17 +1,10 @@
 defmodule Ping.Servers.RefreshLogicTest do
   use ExUnit.Case, async: true
 
-  import Tesla.Mock
-
   alias Ping.API.HealthCheck
   alias Ping.Servers.RefreshLogic
 
   setup do
-    mock(fn
-      %{method: :get} ->
-        %Tesla.Env{status: 200, body: "Successfully Alerted"}
-    end)
-
     now_unix_past =
       DateTime.utc_now() |> DateTime.add(-1, :minute) |> DateTime.to_unix() |> Integer.to_string()
 

@@ -23,7 +23,7 @@ mix deps.get && mix deps.compile
 
 Now you'll be able to start up the server locally or run the tests using either of the following commands:
 ```bash
-mix phx.server
+iex -S mix
 mix test
 ```
 
@@ -81,7 +81,7 @@ The original Phoenix version is in the branch `phoenix-version` if you'd like to
 ## Further Work
 - [x] Add `/ping/remove` endpoint which accepts a `name` parameter.
 - [x] Performance tuning - speed up API by ditching Phoenix.
-- [ ] Replace `:tesla` with `:req`
+- [x] Replace `:tesla` with `:req`
 - [ ] Add an auth mechanism
 - [ ] Address edge case in `/delete` when name doesn't exist
 - [ ] Add guard for last_ping_timestamp (thinking of scenario where incoming timestamp is sooner that state timestamp)

@@ -4,3 +4,5 @@ import Config
 config :logger, level: :info
 
 config :ping, port: 8085
+
+config :ping, stub_adapter: false

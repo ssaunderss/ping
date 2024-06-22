@@ -33,9 +33,7 @@ if config_env() in [:dev, :prod] do
   alert_uri =
     System.get_env("PING_ALERT_URI") ||
       raise """
-      PING_ALERT_URI is missing.
-      If you do not have one, you can set one up on
-      https://webhook.site
+      PING_ALERT_URI is missing. If you do not have one, you can set one up on https://webhook.site
       """
 
   config :ping,

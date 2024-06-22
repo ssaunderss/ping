@@ -1,12 +1,7 @@
 defmodule Ping.API.Alerts do
-  use Tesla
-
   alias Ping.Types.HealthCheck
 
   require Logger
-
-  plug(Tesla.Middleware.BaseUrl, alert_uri())
-  plug(Tesla.Middleware.JSON)
 
   @spec send_alert(HealthCheck.t()) :: term()
   def send_alert(%{name: name, last_ping_timestamp: timestamp} = _ping) do
@@ -16,7 +11,10 @@ defmodule Ping.API.Alerts do
       |> Integer.to_string()
 
     Task.start(fn ->
-      case get("?name=" <> name <> "&last_ping=" <> last_timestamp_unix) do
+      case Req.get(alert_uri(),
+             params: [name: name, last_ping: last_timestamp_unix],
+             adapter: adapter()
+           ) do
         {:ok, _response} ->
           :ok
 
@@ -26,6 +24,22 @@ defmodule Ping.API.Alerts do
     end)
 
     :ok
+  end
+
+  # If the stub adapter is enabled, just prints out response otherwise uses req's default step
+  defp adapter() do
+    if Application.get_env(:ping, :stub_adapter, false) do
+      fn request ->
+        Logger.info(
+          "[alerts:stub_adapater] Your alert #{inspect(request.options.params)} was successfully sent."
+        )
+
+        response = %Req.Response{status: 200, body: "Your alert was successfully sent."}
+        {request, response}
+      end
+    else
+      &Req.Steps.run_finch/1
+    end
   end
 
   defp alert_uri(), do: Application.get_env(:ping, :alert_uri)
