@@ -13,5 +13,5 @@ erl_crash.dump
 fly.toml
 Dockerfile
 .dockerignore
-.DS_Store
+**/.DS_Store
 rel/
