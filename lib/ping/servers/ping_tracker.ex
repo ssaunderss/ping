@@ -38,11 +38,9 @@ defmodule Ping.Servers.PingTracker do
 
   @impl GenServer
   def init(_args) do
-    state = %{}
-
     schedule_refresh()
 
-    {:ok, state}
+    {:ok, %{}}
   end
 
   @impl GenServer
@@ -68,9 +66,9 @@ defmodule Ping.Servers.PingTracker do
 
   @impl GenServer
   def handle_call({:delete, name}, _from, state) do
-    num_keys_old = Map.keys(state) |> length()
-    updated_state = Enum.filter(state, fn {k, _v} -> k != name end) |> Enum.into(%{})
-    num_keys_new = Map.keys(updated_state) |> length()
+    num_keys_old = state |> Map.keys() |> Enum.count()
+    updated_state = Map.delete(state, name)
+    num_keys_new = updated_state |> Map.keys() |> Enum.count()
     {:reply, {:ok, num_keys_old - num_keys_new}, updated_state}
   end
 

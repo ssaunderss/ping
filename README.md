@@ -82,8 +82,7 @@ The original Phoenix version is in the branch `phoenix-version` if you'd like to
 - [x] Add `/ping/remove` endpoint which accepts a `name` parameter.
 - [x] Performance tuning - speed up API by ditching Phoenix.
 - [x] Replace `:tesla` with `:req`
-- [ ] Add an auth mechanism
 - [x] Add guard for last_ping_timestamp - don't allow incoming pings to overwrite previous pings
-- [ ] Tighten up logic around schedule changes
-- [ ] Move state off of this service - maybe try out SQLite -> Fly's LiteFS.
+- [ ] Guard against negative intervals
+- [ ] Move state off of this service - maybe try out SQLite -> Fly's LiteFS. Could potentially have an adapter for stateful / stateless (current)
 - [ ] Add some automated CI/CD for testing/formatting/linting.
